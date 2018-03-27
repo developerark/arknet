@@ -6,7 +6,7 @@ class Arknet:
     # Initialize the network
     def __init__(self):
         self.__layers = []
-        self.__learningRate = 0.3
+        self.__learningRate = 0.05
         self.__weights = None
         pass
     
@@ -84,7 +84,7 @@ def trainMNIST(network, outputNodes):
         targets[int(values[0])] = 0.99
         network.train(inputs, targets)
         count += 1
-        sys.stdout.write("\rProgress: %6.2f" % ((count * 100.0) / totalLines))
+        sys.stdout.write("\r\tProgress: %6.2f" % ((count * 100.0) / totalLines))
         sys.stdout.flush()
     print
 
@@ -101,18 +101,20 @@ def testMNIST(network):
         groundTruth = int(values[0])
         output = network.query(inputs)
         prediction = output.argmax()
-        print("Ground Truth: %i, Prediction: %i" % (groundTruth, prediction))
+        #print("Ground Truth: %i, Prediction: %i" % (groundTruth, prediction))
         if groundTruth == prediction:
             totalCorrect += 1
         else:
             totalFalse += 1
-    print("Correct: %6.2f" % ((totalCorrect * 100.0)/total))
-    print("Incorrect: %6.2f" % ((totalFalse * 100.0)/total))
+    print("\tAccuracy: %6.2f" % ((totalCorrect * 100.0)/total))
+    #print("Incorrect: %6.2f" % ((totalFalse * 100.0)/total))
     
 
 if __name__ == "__main__":
     network = Arknet()
-    network.appendLayers(Layer(784), Layer(200), Layer(10))
+    network.appendLayers(Layer(784), Layer(20), Layer(40), Layer(80),  Layer(10))
 
-    trainMNIST(network, 10)
-    testMNIST(network)
+    for i in range(30):
+        print("Epoch: %i" % (i + 1))
+        trainMNIST(network, 10)
+        testMNIST(network)
